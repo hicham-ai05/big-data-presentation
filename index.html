@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Rôle du Big Data - Hicham El Alaoui</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Canvas for Particle Network -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="vignette"></div>
+
+    <main id="presentation">
+
+        <!-- SLIDE 1: Title -->
+        <section class="slide active" id="slide-1">
+            <div class="content-wrapper">
+                <div class="hero-content">
+                    <div class="tag">Présentation</div>
+                    <h1 class="main-title">Le Rôle du <span class="gradient-text">Big Data</span><br>dans Notre Vie
+                        Moderne</h1>
+                    <div class="divider"></div>
+
+                    <div class="people-container">
+                        <div class="person-block presenter">
+                            <span class="role-label">Présenté par</span>
+                            <h2 class="person-name">Hicham El Alaoui</h2>
+                            <span class="person-title">IA & Big Data</span>
+                        </div>
+
+                        <div class="vertical-line"></div>
+
+                        <div class="person-block supervisor">
+                            <span class="role-label">Encadré par</span>
+                            <h2 class="person-name">Abdelaziz Elmoudni</h2>
+                            <span class="person-title">Professeur & Expert</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« Aujourd'hui, le Big Data influence chaque décision numérique autour de nous. Que ce soit la météo,
+                    les réseaux sociaux, la santé ou le transport, nous sommes entourés de flux massifs de données. Dans
+                    cette présentation, je vais montrer comment le Big Data impacte un individu, une communauté, et je
+                    donnerai un exemple concret que j'ai moi-même développé. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: Definition -->
+        <section class="slide" id="slide-2">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Le Big Data c'est quoi ?</h2>
+                <div class="big-concept">
+                    <div class="concept-circle">
+                        <span class="v-letter">5V</span>
+                        <div class="orbit"></div>
+                    </div>
+                    <div class="v-list">
+                        <div class="v-item">
+                            <div class="icon-box"><i class="fa-solid fa-database"></i></div> <span>Volume</span>
+                        </div>
+                        <div class="v-item">
+                            <div class="icon-box"><i class="fa-solid fa-gauge-high"></i></div> <span>Vitesse</span>
+                        </div>
+                        <div class="v-item">
+                            <div class="icon-box"><i class="fa-solid fa-layer-group"></i></div> <span>Variété</span>
+                        </div>
+                        <div class="v-item">
+                            <div class="icon-box"><i class="fa-solid fa-check-double"></i></div> <span>Véracité</span>
+                        </div>
+                        <div class="v-item">
+                            <div class="icon-box"><i class="fa-solid fa-gem"></i></div> <span>Valeur</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« On parle de Big Data lorsque les données sont trop grandes, trop rapides ou trop complexes pour
+                    être traitées avec les outils classiques. Les technologies Big Data permettent de capturer, stocker
+                    et analyser ces flux en temps réel. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: Impact Individual -->
+        <section class="slide" id="slide-3">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Impact sur l'Individu</h2>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-glow"></div>
+                        <div class="icon"><i class="fa-brands fa-tiktok"></i></div>
+                        <h3>Recommandations</h3>
+                        <p>TikTok, Netflix</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-glow"></div>
+                        <div class="icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h3>Navigation</h3>
+                        <p>Google Maps (Trafic réel)</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-glow"></div>
+                        <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h3>Sécurité</h3>
+                        <p>Détection fraude bancaire</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-glow"></div>
+                        <div class="icon"><i class="fa-solid fa-cloud-sun"></i></div>
+                        <h3>Météo</h3>
+                        <p>Prévisions ultra précises</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-glow"></div>
+                        <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <h3>Santé</h3>
+                        <p>Suivi cardiaque, sommeil</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« Chaque individu interagit avec des systèmes Big Data sans s'en rendre compte. La météo qu'il
+                    consulte, les trajets proposés, les promotions qu'il reçoit — tout est basé sur l'analyse de
+                    milliards de données. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: Impact Society -->
+        <section class="slide" id="slide-4">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Impact sur la Société</h2>
+                <div class="list-layout">
+                    <div class="list-item">
+                        <span class="emoji">📉</span>
+                        <div class="text">
+                            <h3>Prévention des catastrophes</h3>
+                            <p>Anticipation climatique et gestion des risques</p>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <span class="emoji">🚌</span>
+                        <div class="text">
+                            <h3>Transport Public</h3>
+                            <p>Optimisation des flux et trajets</p>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <span class="emoji">🏥</span>
+                        <div class="text">
+                            <h3>Santé Publique</h3>
+                            <p>Gestion hospitalière intelligente</p>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <span class="emoji">📈</span>
+                        <div class="text">
+                            <h3>Politique</h3>
+                            <p>Décisions basées sur les données</p>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <span class="emoji">📰</span>
+                        <div class="text">
+                            <h3>Société</h3>
+                            <p>Analyse globale des tendances sociales</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« Le Big Data ne sert pas seulement les individus : il aide aussi les gouvernements, les villes et
+                    les entreprises à prendre de meilleures décisions. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: Concrete Example -->
+        <section class="slide" id="slide-5">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Exemple Concret : Mon Projet</h2>
+                <div class="project-showcase">
+                    <h3 class="project-name">🌤️ Real-Time Weather Streaming Pipeline</h3>
+
+                    <div class="pipeline-container">
+                        <!-- Pipeline Animation -->
+                        <div class="pipeline-track">
+                            <div class="data-packet p1"></div>
+                            <div class="data-packet p2"></div>
+                            <div class="data-packet p3"></div>
+                        </div>
+
+                        <div class="pipeline-nodes">
+                            <div class="node">
+                                <div class="node-icon python"><i class="fa-brands fa-python"></i></div>
+                                <div class="node-label">Python</div>
+                                <div class="node-desc">Source (1s)</div>
+                            </div>
+                            <div class="connector">
+                                <div class="flow-line"></div>
+                            </div>
+                            <div class="node">
+                                <div class="node-icon kafka">K</div>
+                                <div class="node-label">Kafka</div>
+                                <div class="node-desc">Streaming</div>
+                            </div>
+                            <div class="connector">
+                                <div class="flow-line"></div>
+                            </div>
+                            <div class="node">
+                                <div class="node-icon streamlit">S</div>
+                                <div class="node-label">Streamlit</div>
+                                <div class="node-desc">Dashboard</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tech-stack-future">
+                        <span class="badge">Roadmap</span>
+                        <span class="tech"><i class="fa-brands fa-microsoft"></i> Azure Event Hub</span>
+                        <span class="tech"><i class="fa-solid fa-database"></i> PostgreSQL</span>
+                        <span class="tech"><i class="fa-solid fa-chart-simple"></i> Power BI</span>
+                    </div>
+
+                    <ul class="benefits-list">
+                        <li><i class="fa-solid fa-check"></i> Visualisation Live</li>
+                        <li><i class="fa-solid fa-check"></i> Anticipation Risques</li>
+                        <li><i class="fa-solid fa-check"></i> Évolutif</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« Voici un exemple réel que j'ai développé : un système complet de streaming météo en temps réel
+                    utilisant Kafka. Python récupère la météo, Kafka la diffuse, et Streamlit l'affiche. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: Why this example -->
+        <section class="slide" id="slide-6">
+            <div class="content-wrapper">
+                <h2 class="slide-title">La Force du Big Data</h2>
+                <div class="split-layout">
+                    <div class="left-panel">
+                        <h3>Une simple donnée devient puissante grâce à :</h3>
+                        <ul class="power-list">
+                            <li><i class="fa-solid fa-bolt"></i> Temps réel</li>
+                            <li><i class="fa-solid fa-magnifying-glass-chart"></i> Analyse</li>
+                            <li><i class="fa-solid fa-chart-pie"></i> Visualisation</li>
+                            <li><i class="fa-solid fa-stopwatch"></i> Décision rapide</li>
+                        </ul>
+                    </div>
+                    <div class="right-panel">
+                        <h3>Même principe utilisé par :</h3>
+                        <div class="logos-grid">
+                            <div class="logo-item"><i class="fa-brands fa-google"></i> Google Weather</div>
+                            <div class="logo-item"><i class="fa-solid fa-cloud"></i> Météo France</div>
+                            <div class="logo-item"><i class="fa-solid fa-plane"></i> Aéroports</div>
+                            <div class="logo-item"><i class="fa-brands fa-uber"></i> Uber / Glovo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« Ce projet montre comment une simple donnée météo peut devenir un outil puissant. Ce pipeline est le
+                    même principe utilisé par les géants de la tech. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: Future -->
+        <section class="slide" id="slide-7">
+            <div class="content-wrapper">
+                <h2 class="slide-title">L'Avenir du Big Data</h2>
+                <div class="trends-container">
+                    <div class="trend-bubble t1">
+                        <i class="fa-solid fa-brain"></i>
+                        <span>IA + Big Data</span>
+                    </div>
+                    <div class="trend-bubble t2">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>Edge Computing</span>
+                    </div>
+                    <div class="trend-bubble t3">
+                        <i class="fa-solid fa-city"></i>
+                        <span>Smart Cities</span>
+                    </div>
+                    <div class="trend-bubble t4">
+                        <i class="fa-solid fa-wifi"></i>
+                        <span>IoT</span>
+                    </div>
+                    <div class="trend-bubble t5">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                        <span>Data Ethics</span>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« L'avenir sera construit par des systèmes capables de comprendre le monde en temps réel. Nous sommes
+                    seulement au début. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 8: Conclusion -->
+        <section class="slide" id="slide-8">
+            <div class="content-wrapper">
+                <div class="quote-container">
+                    <i class="fa-solid fa-quote-left quote-icon"></i>
+                    <p class="quote-text">Le Big Data n'est pas seulement une technologie.<br>C'est un <span
+                            class="highlight">nouvel organe</span> pour la société.</p>
+                    <div class="quote-author">
+                        <p>Si nous savons le maîtriser, il nous permettra de construire un monde plus intelligent.</p>
+                        <p><strong>Tout commence avec de petits projets.</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« Le Big Data n'est pas seulement une technologie. C'est un nouvel organe pour la société. »</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: Merci -->
+        <section class="slide" id="slide-9">
+            <div class="content-wrapper">
+                <div class="thank-you-container">
+                    <div class="thank-circle">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h1 class="end-title">Merci pour votre attention</h1>
+                    <div class="contact-info">
+                        <div class="contact-item"><i class="fa-brands fa-linkedin"></i> Hicham El Alaoui</div>
+                        <div class="contact-item"><i class="fa-solid fa-envelope"></i> elalaouih474@gmail.com</div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <p>« Merci à tous pour votre écoute. Je suis disponible pour vos questions. »</p>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="controls">
+        <button id="prev-btn" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="slide-counter"><span id="current-slide-num">1</span> / <span id="total-slides-num">9</span>
+            </div>
+        </div>
+        <button id="next-btn" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="presenter-tools">
+        <div class="timer" id="presentation-timer">00:00</div>
+        <button id="toggle-notes-btn"><i class="fa-regular fa-comment-dots"></i></button>
+    </div>
+
+    <div id="notes-display" class="notes-overlay hidden">
+        <div class="notes-header">
+            <h3><i class="fa-solid fa-microphone-lines"></i> Script</h3>
+        </div>
+        <div class="notes-content">
+            <p id="current-note">...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
