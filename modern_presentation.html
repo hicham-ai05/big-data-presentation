@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Rôle du Big Data - Interactive Presentation</title>
+    <title>Streaming Météo en Temps Réel</title>
     
     <!-- GSAP for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Highlight.js for Python Code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
     <style>
         :root {
@@ -18,16 +21,13 @@
             --bg-card: rgba(15, 23, 42, 0.6);
             --neon-cyan: #00f0ff;
             --neon-purple: #ff00aa;
+            --neon-orange: #ff6a00;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Outfit', sans-serif;
@@ -41,11 +41,8 @@
                 radial-gradient(circle at 85% 30%, rgba(255, 0, 170, 0.08), transparent 25%);
         }
 
-        h1, h2, h3 {
-            font-family: 'Space Grotesk', sans-serif;
-        }
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
 
-        /* Presentation Container */
         #presentation-container {
             width: 100vw;
             height: 100vh;
@@ -53,512 +50,379 @@
         }
 
         .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 4rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 4rem; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; z-index: 1;
         }
 
-        .slide.active {
-            visibility: visible;
-            z-index: 10;
-        }
+        .slide.active { visibility: visible; z-index: 10; }
 
-        /* Controls */
         .controls {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 1.5rem;
-            z-index: 100;
-            background: rgba(15, 23, 42, 0.8);
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 1.5rem; z-index: 100;
+            background: rgba(15, 23, 42, 0.8); padding: 0.8rem 2rem;
+            border-radius: 50px; backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .btn-nav {
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.3s, transform 0.3s;
+            background: transparent; border: none; color: var(--text-main);
+            font-size: 1.5rem; cursor: pointer; transition: color 0.3s, transform 0.3s;
         }
+        .btn-nav:hover { color: var(--neon-cyan); transform: scale(1.2); }
 
-        .btn-nav:hover {
-            color: var(--neon-cyan);
-            transform: scale(1.2);
-        }
+        .progress-dots { display: flex; align-items: center; gap: 0.8rem; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--glass-border); transition: all 0.3s; }
+        .dot.active { background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); transform: scale(1.3); }
 
-        .progress-dots {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--glass-border);
-            transition: all 0.3s;
-        }
-
-        .dot.active {
-            background: var(--neon-cyan);
-            box-shadow: 0 0 10px var(--neon-cyan);
-            transform: scale(1.3);
-        }
-
-        /* Elements */
         .glass-panel {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            max-width: 1200px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
+            background: var(--bg-card); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 1200px; width: 100%; position: relative; overflow: hidden;
         }
 
         .glass-panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
             background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
         }
 
-        /* Typography */
         .title-massive {
-            font-size: clamp(4rem, 8vw, 6rem);
-            font-weight: 800;
-            line-height: 1.1;
-            text-align: center;
-            background: linear-gradient(135deg, #fff, var(--text-muted));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
+            font-size: clamp(3rem, 6vw, 5rem); font-weight: 800; line-height: 1.1;
+            text-align: center; background: linear-gradient(135deg, #fff, var(--text-muted));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;
         }
 
         .gradient-text {
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
-            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite; background-size: 200% auto;
         }
 
-        .subtitle {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .subtitle { font-size: 1.5rem; color: var(--text-muted); text-align: center; max-width: 800px; margin: 0 auto; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
 
-        /* Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .bullet-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .bullet-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.5rem;
-            background: rgba(255,255,255,0.02);
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 1px solid transparent;
-            transition: all 0.4s;
-        }
-
-        .bullet-item:hover {
-            border-color: var(--glass-border);
-            transform: translateX(10px);
-            background: rgba(255,255,255,0.05);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .bullet-icon {
-            font-size: 2rem;
-            color: var(--neon-cyan);
-            background: rgba(0, 240, 255, 0.1);
-            padding: 1rem;
-            border-radius: 12px;
-        }
-
-        /* Mockup Frame */
+        /* Mockups & UI Elements */
         .mockup-frame {
-            background: #1e1e1e;
-            border-radius: 16px;
-            border: 1px solid #333;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0, 240, 255, 0.1);
-            position: relative;
-            transition: transform 0.5s;
+            background: #1e1e1e; border-radius: 16px; border: 1px solid #333;
+            overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0, 240, 255, 0.1);
+            position: relative; transition: transform 0.5s;
+        }
+        
+        /* 3D Tilt Effect applied to the frame itself */
+        .tilt-effect:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.05) translateY(-10px);
+            box-shadow: -20px 20px 60px rgba(0, 240, 255, 0.3), 0 0 40px rgba(255, 0, 170, 0.2);
         }
 
-        .mockup-frame:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0, 240, 255, 0.3);
-        }
-
-        .mockup-header {
-            background: #2d2d2d;
-            padding: 0.8rem 1rem;
-            display: flex;
-            gap: 0.5rem;
-            border-bottom: 1px solid #444;
-        }
-
-        .mockup-dot {
-            width: 12px; height: 12px; border-radius: 50%;
-        }
-        .mockup-dot.r { background: #ff5f56; }
-        .mockup-dot.y { background: #ffbd2e; }
-        .mockup-dot.g { background: #27c93f; }
-
+        .mockup-header { background: #2d2d2d; padding: 0.8rem 1rem; display: flex; gap: 0.5rem; border-bottom: 1px solid #444; }
+        .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .mockup-dot.r { background: #ff5f56; } .mockup-dot.y { background: #ffbd2e; } .mockup-dot.g { background: #27c93f; }
+        
         .mockup-content {
-            width: 100%;
-            height: 350px;
-            background-color: #0f172a;
-            background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.5);
+            width: 100%; height: 350px; background-color: #0f172a;
+            background-size: cover; background-position: center;
         }
 
-        /* Interactive Schema */
-        .schema-container {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 0;
-            flex-wrap: wrap;
+        /* Code IDE */
+        .ide-content {
+            background: #282c34; padding: 1.5rem; font-family: 'Fira Code', monospace;
+            font-size: 0.9rem; overflow: auto; height: 350px; text-align: left; line-height: 1.5;
         }
 
-        .schema-node {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            background: var(--bg-deep);
-            border: 2px solid var(--neon-cyan);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            cursor: pointer;
-            z-index: 2;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        /* Blueprint Frame */
+        .blueprint-frame {
+            border: 2px solid var(--neon-cyan); border-radius: 12px; padding: 10px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.05); position: relative;
+        }
+        .blueprint-frame::before {
+            content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border: 1px dashed var(--neon-cyan); opacity: 0.5; border-radius: 16px; pointer-events: none;
         }
 
-        .schema-node i {
-            font-size: 2rem;
-            color: var(--neon-cyan);
-            margin-bottom: 0.3rem;
+        /* Bullet List */
+        .mission-list { list-style: none; display: flex; flex-direction: column; gap: 1.2rem; }
+        .mission-item {
+            display: flex; align-items: center; gap: 1.5rem; background: rgba(255,255,255,0.03);
+            padding: 1.2rem; border-radius: 12px; border-left: 4px solid var(--neon-cyan);
             transition: all 0.3s;
         }
+        .mission-item:hover { transform: translateX(10px); background: rgba(255,255,255,0.06); }
+        .mission-icon { font-size: 1.8rem; color: var(--neon-cyan); }
 
-        .schema-node span {
-            font-size: 0.85rem;
-            text-align: center;
+        /* Comparison Cards */
+        .comparison-card {
+            background: rgba(255,255,255,0.02); padding: 2rem; border-radius: 16px;
+            border: 1px solid var(--glass-border); transition: all 0.4s; text-align: center;
         }
+        .comparison-card:hover { transform: translateY(-10px); }
+        .comparison-card.kafka:hover { border-color: #e55039; box-shadow: 0 10px 30px rgba(229, 80, 57, 0.2); }
+        .comparison-card.azure:hover { border-color: #00a8ff; box-shadow: 0 10px 30px rgba(0, 168, 255, 0.2); }
 
-        .schema-node:hover {
-            transform: scale(1.15) translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.6);
-            background: var(--neon-cyan);
+        /* Metrics */
+        .metric-card {
+            background: rgba(255,255,255,0.02); padding: 2rem; border-radius: 16px;
+            text-align: center; border: 1px solid var(--glass-border);
         }
+        .metric-value { font-size: 3.5rem; font-weight: 800; color: var(--neon-cyan); margin-bottom: 0.5rem; font-family: 'Space Grotesk', sans-serif; }
 
-        .schema-node:hover i, .schema-node:hover span {
-            color: var(--bg-deep);
-        }
-
-        .schema-line {
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            right: 5%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-cyan));
-            background-size: 200% auto;
-            animation: shine 4s linear infinite;
-            z-index: 1;
-            transform: translateY(-50%);
-            opacity: 0.6;
-        }
-
-        .schema-tooltip {
-            position: absolute;
-            top: 130px;
-            width: 220px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid var(--neon-cyan);
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s;
-            pointer-events: none;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-
-        .schema-node:hover .schema-tooltip {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        /* Stagger Targets */
-        .stagger-item {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
+        @keyframes shine { to { background-position: 200% center; } }
+        .stagger-item { opacity: 0; transform: translateY(30px); }
     </style>
 </head>
 <body>
 
     <div id="presentation-container">
         
-        <!-- Slide 1: Title Slide -->
+        <!-- Slide 1: Titre -->
         <div class="slide active" id="slide-1">
             <div class="glass-panel stagger-container">
-                <div class="tag stagger-item" style="color: var(--neon-cyan); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1rem; text-align: center;">Rapport Officiel 2026</div>
-                <h1 class="title-massive stagger-item">Le Rôle du <br><span class="gradient-text">Big Data</span></h1>
-                <p class="subtitle stagger-item">Une analyse approfondie de l'impact des données massives sur la société moderne et les infrastructures technologiques.</p>
-                <div class="stagger-item" style="display: flex; justify-content: center; margin-top: 3rem; gap: 2rem;">
-                    <div style="text-align: center;">
-                        <span style="color: var(--text-muted); font-size: 0.9rem;">Présenté par</span>
-                        <h3 style="color: white; margin-top: 0.5rem;">Hicham El Alaoui</h3>
-                    </div>
-                    <div style="width: 1px; background: var(--glass-border);"></div>
-                    <div style="text-align: center;">
-                        <span style="color: var(--text-muted); font-size: 0.9rem;">Encadré par</span>
-                        <h3 style="color: white; margin-top: 0.5rem;">Abdelaziz elmouden</h3>
+                <div class="tag stagger-item" style="color: var(--neon-cyan); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1rem; text-align: center;">Projet de Fin d'Études</div>
+                <h1 class="title-massive stagger-item">Streaming Météo <br><span class="gradient-text">En Temps Réel</span></h1>
+                <p class="subtitle stagger-item" style="margin-bottom: 3rem;">Architecture de Pipelines de Données avec Kafka & Azure</p>
+                <div class="stagger-item" style="display: flex; justify-content: center;">
+                    <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 1.5rem 3rem; border-radius: 50px; border: 1px solid var(--glass-border);">
+                        <span style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Auteur</span>
+                        <h3 style="color: white; margin-top: 0.5rem; font-size: 1.8rem;">Hicham El Alaoui</h3>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 2: Executive Summary -->
+        <!-- Slide 2: Missions & Objectifs -->
         <div class="slide" id="slide-2">
             <div class="glass-panel stagger-container">
-                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 2rem;">Executive Summary</h2>
-                <ul class="bullet-list">
-                    <li class="bullet-item stagger-item">
-                        <div class="bullet-icon"><i class="fa-solid fa-bolt"></i></div>
-                        <div>
-                            <h3 style="color: white; font-size: 1.5rem; margin-bottom: 0.5rem;">Traitement en Temps Réel</h3>
-                            <p style="color: var(--text-muted); line-height: 1.6;">L'architecture Kafka permet une ingestion et un traitement ultra-rapide des flux de données, essentiels pour la météo et la finance.</p>
-                        </div>
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 2rem; text-align: center;">Missions & Objectifs</h2>
+                <ul class="mission-list">
+                    <li class="mission-item stagger-item">
+                        <i class="fa-solid fa-network-wired mission-icon"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Conception d'Architecture</strong> : Déployer une architecture scalable pour le streaming de données.</div>
                     </li>
-                    <li class="bullet-item stagger-item">
-                        <div class="bullet-icon"><i class="fa-solid fa-chart-pie"></i></div>
-                        <div>
-                            <h3 style="color: white; font-size: 1.5rem; margin-bottom: 0.5rem;">Visualisation Interactive</h3>
-                            <p style="color: var(--text-muted); line-height: 1.6;">Utilisation de Streamlit et PowerBI pour transformer des données brutes complexes en tableaux de bord actionnables pour les décideurs.</p>
-                        </div>
+                    <li class="mission-item stagger-item" style="border-left-color: #e55039;">
+                        <i class="fa-solid fa-bolt mission-icon" style="color: #e55039;"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Pipeline Kafka</strong> : Déployer un pipeline de streaming ultra-rapide et résilient.</div>
                     </li>
-                    <li class="bullet-item stagger-item">
-                        <div class="bullet-icon" style="color: var(--neon-purple); background: rgba(255, 0, 170, 0.1);"><i class="fa-solid fa-shield-halved"></i></div>
-                        <div>
-                            <h3 style="color: white; font-size: 1.5rem; margin-bottom: 0.5rem;">Sécurité & Scalabilité</h3>
-                            <p style="color: var(--text-muted); line-height: 1.6;">L'intégration du Cloud garantit une haute disponibilité et une protection des données face à la croissance exponentielle du volume (Les 5 V).</p>
-                        </div>
+                    <li class="mission-item stagger-item" style="border-left-color: #00a8ff;">
+                        <i class="fa-brands fa-microsoft mission-icon" style="color: #00a8ff;"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Azure Event Hubs</strong> : Intégrer les services Cloud managés pour l'élasticité.</div>
+                    </li>
+                    <li class="mission-item stagger-item" style="border-left-color: #3b82f6;">
+                        <i class="fa-solid fa-database mission-icon" style="color: #3b82f6;"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Stockage PostgreSQL</strong> : Automatiser l'ingestion dans une base de données relationnelle.</div>
+                    </li>
+                    <li class="mission-item stagger-item" style="border-left-color: var(--neon-purple);">
+                        <i class="fa-solid fa-chart-pie mission-icon" style="color: var(--neon-purple);"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Restitution (Insights)</strong> : Activer les tableaux de bord interactifs via Power BI & Streamlit.</div>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <!-- Slide 3: Interactive Schema -->
+        <!-- Slide 3: Architecture de Bout en Bout -->
         <div class="slide" id="slide-3">
             <div class="glass-panel stagger-container">
-                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1rem; text-align: center;">Architecture Data Pipeline</h2>
-                <p class="subtitle stagger-item" style="margin-bottom: 3rem;">Un flux de traitement de bout en bout, de l'ingestion à la prise de décision via l'Intelligence Artificielle.</p>
-                
-                <div class="schema-container stagger-item">
-                    <div class="schema-line"></div>
-                    
-                    <div class="schema-node" style="border-color: #a855f7;">
-                        <i class="fa-solid fa-server" style="color: #a855f7;"></i>
-                        <span style="font-weight: bold; color: white;">Sources</span>
-                        <div class="schema-tooltip" style="border-color: #a855f7;">
-                            <h4 style="color: #a855f7; margin-bottom: 0.5rem;">Data Ingestion</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Données hétérogènes (IoT, APIs, Logs) ingérées en continu via des scripts Python et des connecteurs natifs.</p>
-                        </div>
-                    </div>
-
-                    <div class="schema-node" style="border-color: var(--neon-cyan);">
-                        <i class="fa-solid fa-network-wired" style="color: var(--neon-cyan);"></i>
-                        <span style="font-weight: bold; color: white;">Kafka</span>
-                        <div class="schema-tooltip" style="border-color: var(--neon-cyan);">
-                            <h4 style="color: var(--neon-cyan); margin-bottom: 0.5rem;">Event Streaming</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Apache Kafka agit comme le système nerveux central, gérant des millions de messages par seconde avec tolérance aux pannes.</p>
-                        </div>
-                    </div>
-
-                    <div class="schema-node" style="border-color: #ec4899;">
-                        <i class="fa-solid fa-bolt" style="color: #ec4899;"></i>
-                        <span style="font-weight: bold; color: white;">Spark</span>
-                        <div class="schema-tooltip" style="border-color: #ec4899;">
-                            <h4 style="color: #ec4899; margin-bottom: 0.5rem;">Data Processing</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Apache Spark effectue le nettoyage et la transformation en mémoire (ETL) pour un traitement à ultra-haute vitesse.</p>
-                        </div>
-                    </div>
-
-                    <div class="schema-node" style="border-color: #3b82f6;">
-                        <i class="fa-solid fa-database" style="color: #3b82f6;"></i>
-                        <span style="font-weight: bold; color: white;">Data Lake</span>
-                        <div class="schema-tooltip" style="border-color: #3b82f6;">
-                            <h4 style="color: #3b82f6; margin-bottom: 0.5rem;">Storage HDFS / S3</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Stockage distribué massif et sécurisé des données structurées et non-structurées prêtes à l'analyse.</p>
-                        </div>
-                    </div>
-
-                    <div class="schema-node" style="border-color: var(--neon-purple);">
-                        <i class="fa-solid fa-brain" style="color: var(--neon-purple);"></i>
-                        <span style="font-weight: bold; color: white;">AI Model</span>
-                        <div class="schema-tooltip" style="border-color: var(--neon-purple);">
-                            <h4 style="color: var(--neon-purple); margin-bottom: 0.5rem;">Machine Learning</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Modèles prédictifs et d'apprentissage profond pour extraire des patterns cachés et anticiper les tendances.</p>
-                        </div>
-                    </div>
-
-                    <div class="schema-node" style="border-color: #10b981;">
-                        <i class="fa-solid fa-chart-line" style="color: #10b981;"></i>
-                        <span style="font-weight: bold; color: white;">Analytics</span>
-                        <div class="schema-tooltip" style="border-color: #10b981;">
-                            <h4 style="color: #10b981; margin-bottom: 0.5rem;">Dashboarding</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Visualisation interactive (PowerBI / Streamlit) permettant aux décideurs d'avoir une vision claire et actionnable.</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 4: Data & Evidence -->
-        <div class="slide" id="slide-4">
-            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1.5rem;">Architecture de Bout en Bout</h2>
                 <div class="grid-2">
+                    <div class="stagger-item blueprint-frame">
+                        <img src="arch_blueprint.png" alt="Architecture Diagram" style="width: 100%; height: 350px; object-fit: cover; border-radius: 8px;">
+                    </div>
                     <div class="stagger-item">
-                        <h2 class="gradient-text" style="font-size: 3rem; margin-bottom: 1.5rem;">Data & Evidence</h2>
-                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">L'explosion du Volume des Données</h3>
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Motif "Lambda" (Big Data)</h3>
                         <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
-                            Comme le montre notre analyse, le volume de données généré par les capteurs IoT et les interactions sociales a été multiplié par 5 au cours des trois dernières années. 
-                        </p>
-                        <div style="background: rgba(0, 240, 255, 0.05); border-left: 4px solid var(--neon-cyan); padding: 1.5rem; border-radius: 0 12px 12px 0;">
-                            <strong style="color: white;">Insight Clé:</strong> Les entreprises qui intègrent l'analyse en temps réel augmentent leur réactivité opérationnelle de 40%.
-                        </div>
-                    </div>
-                    <div class="stagger-item">
-                        <div class="mockup-frame">
-                            <div class="mockup-header">
-                                <div class="mockup-dot r"></div>
-                                <div class="mockup-dot y"></div>
-                                <div class="mockup-dot g"></div>
-                            </div>
-                            <!-- Image URL Placeholder here -->
-                            <div class="mockup-content" style="background-image: url('dashboard_mockup.png');">
-                                <span style="background: rgba(0,0,0,0.8); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--neon-cyan); opacity: 0; transition: opacity 0.3s; cursor: pointer;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">Dashboard Real-Time View</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 5: Deep Dive -->
-        <div class="slide" id="slide-5">
-            <div class="glass-panel stagger-container">
-                <div class="grid-2">
-                    <div class="stagger-item">
-                        <div class="mockup-frame" style="transform: perspective(1000px) rotateY(5deg);">
-                            <div class="mockup-header">
-                                <div class="mockup-dot r"></div>
-                                <div class="mockup-dot y"></div>
-                                <div class="mockup-dot g"></div>
-                            </div>
-                            <!-- Image URL Placeholder here -->
-                            <div class="mockup-content" style="background-image: url('ai_analytics.png');">
-                                <span style="background: rgba(0,0,0,0.8); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--neon-purple); opacity: 0; transition: opacity 0.3s; cursor: pointer;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">Machine Learning Analytics</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stagger-item">
-                        <h2 class="gradient-text" style="font-size: 3rem; margin-bottom: 1.5rem;">Deep Dive</h2>
-                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">L'Architecture Avancée & Prédiction</h3>
-                        <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
-                            La véritable force du Big Data ne réside pas seulement dans le stockage, mais dans la valorisation par <strong>l'Intelligence Artificielle</strong>. En associant un cluster Spark et des algorithmes de Deep Learning, l'infrastructure passe d'une approche réactive à une stratégie proactive.
+                            Notre conception repose sur une séparation claire des responsabilités :
                         </p>
                         <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1rem;">
-                            <li style="color: white; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border-left: 3px solid #a855f7;">
-                                <strong style="color: #a855f7;">Clustering (K-Means)</strong> - Segmentation avancée des données pour un ciblage ultra-précis et dynamique.
-                            </li>
-                            <li style="color: white; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border-left: 3px solid #ec4899;">
-                                <strong style="color: #ec4899;">Time-Series Forecasting (LSTM)</strong> - Prédiction des anomalies et modélisation complexe avec 98% de précision.
-                            </li>
-                            <li style="color: white; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border-left: 3px solid var(--neon-cyan);">
-                                <strong style="color: var(--neon-cyan);">Scalabilité Élastique</strong> - Optimisation des ressources Cloud en fonction de la charge de traitement.
-                            </li>
+                            <li style="color: white;"><strong style="color: var(--neon-cyan);">1. Ingestion :</strong> Scripts Python collectant la donnée brute.</li>
+                            <li style="color: white;"><strong style="color: var(--neon-purple);">2. Broker (Courtier) :</strong> Distribution asynchrone haut débit (Kafka/Azure).</li>
+                            <li style="color: white;"><strong style="color: #3b82f6);">3. Destination (Sink) :</strong> Stockage structuré pour l'analyse décisionnelle.</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 6: Conclusion -->
+        <!-- Slide 4: Le Producteur Python (Ingestion) -->
+        <div class="slide" id="slide-4">
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1.5rem;">Le Producteur Python</h2>
+                <div class="grid-2">
+                    <div class="stagger-item">
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Ingestion Continue des Données</h3>
+                        <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            Un script robuste interrogeant de manière asynchrone l'API <strong>OpenWeatherMap</strong> toutes les 10 secondes.
+                        </p>
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                            <strong style="color: white;">Processus de Sérialisation :</strong><br>
+                            <span style="color: var(--text-muted);">Les données (Température, Humidité, Vitesse du Vent) sont extraites, formatées en JSON, et poussées vers le topic Kafka de manière atomique.</span>
+                        </div>
+                    </div>
+                    <div class="stagger-item">
+                        <div class="mockup-frame tilt-effect">
+                            <div class="mockup-header">
+                                <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+                                <span style="color: #888; font-size: 0.8rem; margin-left: auto;">producer.py - VS Code</span>
+                            </div>
+                            <div class="ide-content">
+<pre><code class="language-python">import json
+import time
+import requests
+from kafka import KafkaProducer
+
+def fetch_weather(city="Paris"):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid=API_KEY"
+    res = requests.get(url).json()
+    return {
+        "city": city,
+        "temperature": res["main"]["temp"],
+        "humidity": res["main"]["humidity"],
+        "wind_speed": res["wind"]["speed"]
+    }
+
+producer = KafkaProducer(
+    bootstrap_servers=['localhost:9092'],
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
+while True:
+    data = fetch_weather()
+    producer.send('weather_topic', data)
+    print(f"Sent: {data}")
+    time.sleep(10)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Intégration Kafka & Azure -->
+        <div class="slide" id="slide-5">
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 3rem; text-align: center;">Intégration Kafka & Azure</h2>
+                <div class="grid-2 stagger-item">
+                    <div class="comparison-card kafka">
+                        <i class="fa-solid fa-server" style="font-size: 3rem; color: #e55039; margin-bottom: 1rem;"></i>
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Apache Kafka</h3>
+                        <p style="color: var(--text-muted); line-height: 1.6;">
+                            Hébergé localement ou sur des machines virtuelles dédiées. Offre un <strong>débit ultra-élevé</strong> et un contrôle total sur l'infrastructure et la configuration des partitions.
+                        </p>
+                    </div>
+                    <div class="comparison-card azure">
+                        <i class="fa-brands fa-microsoft" style="font-size: 3rem; color: #00a8ff; margin-bottom: 1rem;"></i>
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Azure Event Hubs</h3>
+                        <p style="color: var(--text-muted); line-height: 1.6;">
+                            Service cloud entièrement géré (PaaS). Permet une <strong>scalabilité automatique</strong> (cloud scale) sans gestion de serveurs, avec une intégration native à l'écosystème Azure.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Stockage PostgreSQL -->
         <div class="slide" id="slide-6">
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1.5rem;">Stockage PostgreSQL</h2>
+                <div class="grid-2">
+                    <div class="stagger-item">
+                        <div class="mockup-frame tilt-effect">
+                            <div class="mockup-header"><div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div></div>
+                            <div class="mockup-content" style="background-image: url('postgres_db.png');"></div>
+                        </div>
+                    </div>
+                    <div class="stagger-item">
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Persistance Relationnelle</h3>
+                        <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            Les flux de données bruts sont consommés, validés, et structurés dans des tables relationnelles.
+                        </p>
+                        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1rem;">
+                            <li style="color: white; border-left: 2px solid var(--neon-cyan); padding-left: 1rem;">Intégrité transactionnelle (ACID)</li>
+                            <li style="color: white; border-left: 2px solid var(--neon-cyan); padding-left: 1rem;">Indexation temporelle pour requêtes BI rapides</li>
+                            <li style="color: white; border-left: 2px solid var(--neon-cyan); padding-left: 1rem;">Historisation complète des événements météo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Business Intelligence avec Power BI -->
+        <div class="slide" id="slide-7">
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1.5rem;">Business Intelligence avec Power BI</h2>
+                <div class="grid-2">
+                    <div class="stagger-item">
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Décisions Basées sur la Donnée</h3>
+                        <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            La donnée stockée prend tout son sens grâce à l'analyse visuelle. Power BI permet d'identifier des tendances historiques.
+                        </p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <span style="background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 50px; color: white;">🔥 Cartes de Chaleur (Humidité)</span>
+                            <span style="background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 50px; color: white;">📊 Comparaisons Dynamiques</span>
+                            <span style="background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 50px; color: white;">⚠️ Alertes Vent</span>
+                        </div>
+                    </div>
+                    <div class="stagger-item">
+                        <div class="mockup-frame tilt-effect" style="border: 1px solid #f2c811;">
+                            <div class="mockup-header" style="background: #333;"><span style="color: #f2c811; font-weight: bold; font-size: 0.8rem;">Power BI Report Viewer</span></div>
+                            <div class="mockup-content" style="background-image: url('powerbi_dashboard.png');"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Interface Streamlit -->
+        <div class="slide" id="slide-8">
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1.5rem;">Interface Utilisateur Streamlit</h2>
+                <div class="grid-2">
+                    <div class="stagger-item">
+                        <div class="mockup-frame tilt-effect">
+                            <div class="mockup-header">
+                                <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+                                <span style="color: #888; font-size: 0.8rem; margin-left: 10px;">http://localhost:8501 - Weather Stream</span>
+                            </div>
+                            <div class="mockup-content" style="background-image: url('streamlit_app.png');"></div>
+                        </div>
+                    </div>
+                    <div class="stagger-item">
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Légèreté & Réactivité</h3>
+                        <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            Une application web moderne déployée via Streamlit pour un accès immédiat aux analyses en temps réel, sans la lourdeur d'outils BI traditionnels.
+                        </p>
+                        <p style="color: var(--neon-cyan);"><i class="fa-solid fa-check"></i> Actualisation automatique des graphiques</p>
+                        <p style="color: var(--neon-cyan); margin-top: 0.5rem;"><i class="fa-solid fa-check"></i> KPIs en direct (Température, Humidité)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Conclusion -->
+        <div class="slide" id="slide-9">
             <div class="glass-panel stagger-container" style="text-align: center;">
-                <i class="fa-solid fa-rocket stagger-item" style="font-size: 4rem; color: var(--neon-cyan); margin-bottom: 2rem;"></i>
-                <h2 class="title-massive stagger-item" style="font-size: 4rem;">Conclusion & Next Steps</h2>
-                <p class="subtitle stagger-item" style="margin-bottom: 3rem;">Le Big Data est l'organe central de l'évolution technologique. La prochaine phase consistera à intégrer le Edge Computing pour décentraliser l'analyse.</p>
+                <h2 class="title-massive stagger-item" style="font-size: 4rem; margin-bottom: 3rem;">Conclusion & Performances</h2>
                 
+                <div class="grid-2 stagger-item" style="grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 4rem;">
+                    <div class="metric-card">
+                        <div class="metric-value counter" data-target="500">0</div>
+                        <span style="color: var(--text-muted);">Latence de Bout en Bout (ms)</span>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value counter" data-target="100">0</div>
+                        <span style="color: var(--text-muted);">% Durabilité des Données</span>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value counter" data-target="99.9">0</div>
+                        <span style="color: var(--text-muted);">% Disponibilité (Uptime)</span>
+                    </div>
+                </div>
+
                 <div class="stagger-item" style="background: rgba(255,255,255,0.02); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); display: inline-block;">
-                    <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem;">Questions & Réponses</h3>
-                    <p style="color: var(--text-muted);">Merci de votre attention. La session est ouverte pour vos questions.</p>
+                    <h3 style="color: white; font-size: 2rem; margin-bottom: 1rem;">Merci de votre attention</h3>
+                    <p style="color: var(--neon-cyan); font-size: 1.2rem;">Session Questions / Réponses</p>
                 </div>
             </div>
         </div>
@@ -568,20 +432,19 @@
     <!-- Navigation Controls -->
     <div class="controls">
         <button class="btn-nav" id="prevBtn"><i class="fa-solid fa-arrow-left"></i></button>
-        <div class="progress-dots" id="dots-container">
-            <!-- Dots generated via JS -->
-        </div>
+        <div class="progress-dots" id="dots-container"></div>
         <button class="btn-nav" id="nextBtn"><i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            hljs.highlightAll(); // Syntax highlighting for Python
+
             const slides = document.querySelectorAll('.slide');
             const totalSlides = slides.length;
             let currentSlide = 0;
             let isAnimating = false;
 
-            // Generate Pagination Dots
             const dotsContainer = document.getElementById('dots-container');
             slides.forEach((_, index) => {
                 const dot = document.createElement('div');
@@ -591,12 +454,28 @@
             });
             const dots = document.querySelectorAll('.dot');
 
-            // Initialize GSAP
             gsap.set('.slide', { opacity: 0, scale: 0.95, visibility: 'hidden' });
             gsap.set(slides[0], { opacity: 1, scale: 1, visibility: 'visible' });
             
-            // Initial animation for the first slide
             animateSlideIn(slides[0]);
+
+            function animateCounters(slide) {
+                const counters = slide.querySelectorAll('.counter');
+                counters.forEach(counter => {
+                    const target = parseFloat(counter.getAttribute('data-target'));
+                    let val = { v: 0 };
+                    gsap.to(val, {
+                        v: target,
+                        duration: 2,
+                        ease: "power2.out",
+                        onUpdate: () => {
+                            // format decimal nicely if it has one
+                            counter.innerText = target % 1 === 0 ? Math.round(val.v) : val.v.toFixed(1);
+                            if(target === 500 && val.v > 499) counter.innerText = "<500";
+                        }
+                    });
+                });
+            }
 
             function animateSlideIn(slide) {
                 const items = slide.querySelectorAll('.stagger-item');
@@ -604,6 +483,10 @@
                     { opacity: 0, y: 30 },
                     { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out", delay: 0.2 }
                 );
+                
+                if(slide.id === 'slide-9') {
+                    setTimeout(() => animateCounters(slide), 800);
+                }
             }
 
             function goToSlide(index) {
@@ -613,32 +496,22 @@
                 const outgoing = slides[currentSlide];
                 const incoming = slides[index];
 
-                // Update dots
                 dots[currentSlide].classList.remove('active');
                 dots[index].classList.add('active');
 
-                // Outgoing Animation
                 gsap.to(outgoing, {
-                    opacity: 0,
-                    scale: 1.05,
-                    duration: 0.6,
-                    ease: "power2.inOut",
+                    opacity: 0, scale: 1.05, duration: 0.6, ease: "power2.inOut",
                     onComplete: () => {
                         outgoing.classList.remove('active');
                         gsap.set(outgoing, { visibility: 'hidden' });
                     }
                 });
 
-                // Incoming Animation
                 incoming.classList.add('active');
                 gsap.set(incoming, { visibility: 'visible', scale: 0.95 });
                 
                 gsap.to(incoming, {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.6,
-                    ease: "power2.inOut",
-                    delay: 0.3,
+                    opacity: 1, scale: 1, duration: 0.6, ease: "power2.inOut", delay: 0.3,
                     onComplete: () => {
                         isAnimating = false;
                         currentSlide = index;
@@ -648,21 +521,12 @@
                 animateSlideIn(incoming);
             }
 
-            document.getElementById('nextBtn').addEventListener('click', () => {
-                goToSlide(currentSlide + 1);
-            });
+            document.getElementById('nextBtn').addEventListener('click', () => goToSlide(currentSlide + 1));
+            document.getElementById('prevBtn').addEventListener('click', () => goToSlide(currentSlide - 1));
 
-            document.getElementById('prevBtn').addEventListener('click', () => {
-                goToSlide(currentSlide - 1);
-            });
-
-            // Keyboard navigation
             document.addEventListener('keydown', (e) => {
-                if(e.key === 'ArrowRight' || e.key === 'Space') {
-                    goToSlide(currentSlide + 1);
-                } else if(e.key === 'ArrowLeft') {
-                    goToSlide(currentSlide - 1);
-                }
+                if(e.key === 'ArrowRight' || e.key === 'Space') goToSlide(currentSlide + 1);
+                else if(e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
             });
         });
     </script>
