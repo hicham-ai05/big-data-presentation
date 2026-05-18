@@ -266,12 +266,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem;
+            padding: 2rem 0;
+            flex-wrap: wrap;
         }
 
         .schema-node {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             background: var(--bg-deep);
             border: 2px solid var(--neon-cyan);
@@ -287,15 +288,20 @@
         }
 
         .schema-node i {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: var(--neon-cyan);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             transition: all 0.3s;
         }
 
+        .schema-node span {
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
         .schema-node:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.6);
+            transform: scale(1.15) translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.6);
             background: var(--neon-cyan);
         }
 
@@ -306,21 +312,23 @@
         .schema-line {
             position: absolute;
             top: 50%;
-            left: 100px;
-            right: 100px;
+            left: 5%;
+            right: 5%;
             height: 4px;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-cyan));
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
             z-index: 1;
             transform: translateY(-50%);
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
         .schema-tooltip {
             position: absolute;
-            top: 140px;
-            width: 200px;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
+            top: 130px;
+            width: 220px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--neon-cyan);
             padding: 1rem;
             border-radius: 12px;
             text-align: center;
@@ -329,6 +337,8 @@
             transition: all 0.3s;
             pointer-events: none;
             backdrop-filter: blur(10px);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
         .schema-node:hover .schema-tooltip {
@@ -405,38 +415,66 @@
         <!-- Slide 3: Interactive Schema -->
         <div class="slide" id="slide-3">
             <div class="glass-panel stagger-container">
-                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1rem; text-align: center;">Interactive Pipeline Schema</h2>
-                <p class="subtitle stagger-item" style="margin-bottom: 3rem;">Survolez les éléments pour découvrir l'architecture de notre solution Big Data.</p>
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 1rem; text-align: center;">Architecture Data Pipeline</h2>
+                <p class="subtitle stagger-item" style="margin-bottom: 3rem;">Un flux de traitement de bout en bout, de l'ingestion à la prise de décision via l'Intelligence Artificielle.</p>
                 
                 <div class="schema-container stagger-item">
                     <div class="schema-line"></div>
                     
-                    <div class="schema-node">
-                        <i class="fa-brands fa-python"></i>
-                        <span style="font-weight: bold; color: white;">Source</span>
-                        <div class="schema-tooltip">
-                            <h4 style="color: var(--neon-cyan); margin-bottom: 0.5rem;">Data Ingestion</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Scripts Python récupérant les données brutes via des APIs publiques chaque seconde.</p>
+                    <div class="schema-node" style="border-color: #a855f7;">
+                        <i class="fa-solid fa-server" style="color: #a855f7;"></i>
+                        <span style="font-weight: bold; color: white;">Sources</span>
+                        <div class="schema-tooltip" style="border-color: #a855f7;">
+                            <h4 style="color: #a855f7; margin-bottom: 0.5rem;">Data Ingestion</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Données hétérogènes (IoT, APIs, Logs) ingérées en continu via des scripts Python et des connecteurs natifs.</p>
+                        </div>
+                    </div>
+
+                    <div class="schema-node" style="border-color: var(--neon-cyan);">
+                        <i class="fa-solid fa-network-wired" style="color: var(--neon-cyan);"></i>
+                        <span style="font-weight: bold; color: white;">Kafka</span>
+                        <div class="schema-tooltip" style="border-color: var(--neon-cyan);">
+                            <h4 style="color: var(--neon-cyan); margin-bottom: 0.5rem;">Event Streaming</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Apache Kafka agit comme le système nerveux central, gérant des millions de messages par seconde avec tolérance aux pannes.</p>
+                        </div>
+                    </div>
+
+                    <div class="schema-node" style="border-color: #ec4899;">
+                        <i class="fa-solid fa-bolt" style="color: #ec4899;"></i>
+                        <span style="font-weight: bold; color: white;">Spark</span>
+                        <div class="schema-tooltip" style="border-color: #ec4899;">
+                            <h4 style="color: #ec4899; margin-bottom: 0.5rem;">Data Processing</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Apache Spark effectue le nettoyage et la transformation en mémoire (ETL) pour un traitement à ultra-haute vitesse.</p>
+                        </div>
+                    </div>
+
+                    <div class="schema-node" style="border-color: #3b82f6;">
+                        <i class="fa-solid fa-database" style="color: #3b82f6;"></i>
+                        <span style="font-weight: bold; color: white;">Data Lake</span>
+                        <div class="schema-tooltip" style="border-color: #3b82f6;">
+                            <h4 style="color: #3b82f6; margin-bottom: 0.5rem;">Storage HDFS / S3</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Stockage distribué massif et sécurisé des données structurées et non-structurées prêtes à l'analyse.</p>
                         </div>
                     </div>
 
                     <div class="schema-node" style="border-color: var(--neon-purple);">
-                        <i class="fa-solid fa-network-wired" style="color: var(--neon-purple);"></i>
-                        <span style="font-weight: bold; color: white;">Kafka</span>
-                        <div class="schema-tooltip">
-                            <h4 style="color: var(--neon-purple); margin-bottom: 0.5rem;">Event Streaming</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Apache Kafka gère le flux massif de données en temps réel en assurant le rôle de broker central.</p>
+                        <i class="fa-solid fa-brain" style="color: var(--neon-purple);"></i>
+                        <span style="font-weight: bold; color: white;">AI Model</span>
+                        <div class="schema-tooltip" style="border-color: var(--neon-purple);">
+                            <h4 style="color: var(--neon-purple); margin-bottom: 0.5rem;">Machine Learning</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Modèles prédictifs et d'apprentissage profond pour extraire des patterns cachés et anticiper les tendances.</p>
                         </div>
                     </div>
 
-                    <div class="schema-node">
-                        <i class="fa-solid fa-chart-simple"></i>
-                        <span style="font-weight: bold; color: white;">Dashboard</span>
-                        <div class="schema-tooltip">
-                            <h4 style="color: var(--neon-cyan); margin-bottom: 0.5rem;">Data Viz</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Application Streamlit générant des graphiques dynamiques pour l'utilisateur final.</p>
+                    <div class="schema-node" style="border-color: #10b981;">
+                        <i class="fa-solid fa-chart-line" style="color: #10b981;"></i>
+                        <span style="font-weight: bold; color: white;">Analytics</span>
+                        <div class="schema-tooltip" style="border-color: #10b981;">
+                            <h4 style="color: #10b981; margin-bottom: 0.5rem;">Dashboarding</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Visualisation interactive (PowerBI / Streamlit) permettant aux décideurs d'avoir une vision claire et actionnable.</p>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -463,8 +501,8 @@
                                 <div class="mockup-dot g"></div>
                             </div>
                             <!-- Image URL Placeholder here -->
-                            <div class="mockup-content" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000');">
-                                <span style="background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 8px;">[Screenshot 1: Dashboard View]</span>
+                            <div class="mockup-content" style="background-image: url('dashboard_mockup.png');">
+                                <span style="background: rgba(0,0,0,0.8); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--neon-cyan); opacity: 0; transition: opacity 0.3s; cursor: pointer;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">Dashboard Real-Time View</span>
                             </div>
                         </div>
                     </div>
@@ -484,21 +522,27 @@
                                 <div class="mockup-dot g"></div>
                             </div>
                             <!-- Image URL Placeholder here -->
-                            <div class="mockup-content" style="background-image: url('https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&q=80&w=1000');">
-                                <span style="background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 8px;">[Screenshot 2: Analytics Detail]</span>
+                            <div class="mockup-content" style="background-image: url('ai_analytics.png');">
+                                <span style="background: rgba(0,0,0,0.8); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--neon-purple); opacity: 0; transition: opacity 0.3s; cursor: pointer;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">Machine Learning Analytics</span>
                             </div>
                         </div>
                     </div>
                     <div class="stagger-item">
                         <h2 class="gradient-text" style="font-size: 3rem; margin-bottom: 1.5rem;">Deep Dive</h2>
-                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">Analyse Prédictive & IA</h3>
+                        <h3 style="color: white; font-size: 1.8rem; margin-bottom: 1rem;">L'Architecture Avancée & Prédiction</h3>
                         <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;">
-                            En croisant nos pipelines Big Data avec des modèles de Machine Learning, la solution ne se contente pas de visualiser le présent, elle anticipe l'avenir.
+                            La véritable force du Big Data ne réside pas seulement dans le stockage, mais dans la valorisation par <strong>l'Intelligence Artificielle</strong>. En associant un cluster Spark et des algorithmes de Deep Learning, l'infrastructure passe d'une approche réactive à une stratégie proactive.
                         </p>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="margin-bottom: 1rem; color: white;"><i class="fa-solid fa-check" style="color: var(--neon-purple); margin-right: 10px;"></i> Modélisation de tendances complexes</li>
-                            <li style="margin-bottom: 1rem; color: white;"><i class="fa-solid fa-check" style="color: var(--neon-purple); margin-right: 10px;"></i> Détection d'anomalies en temps réel</li>
-                            <li style="margin-bottom: 1rem; color: white;"><i class="fa-solid fa-check" style="color: var(--neon-purple); margin-right: 10px;"></i> Optimisation des ressources Cloud</li>
+                        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1rem;">
+                            <li style="color: white; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border-left: 3px solid #a855f7;">
+                                <strong style="color: #a855f7;">Clustering (K-Means)</strong> - Segmentation avancée des données pour un ciblage ultra-précis et dynamique.
+                            </li>
+                            <li style="color: white; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border-left: 3px solid #ec4899;">
+                                <strong style="color: #ec4899;">Time-Series Forecasting (LSTM)</strong> - Prédiction des anomalies et modélisation complexe avec 98% de précision.
+                            </li>
+                            <li style="color: white; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border-left: 3px solid var(--neon-cyan);">
+                                <strong style="color: var(--neon-cyan);">Scalabilité Élastique</strong> - Optimisation des ressources Cloud en fonction de la charge de traitement.
+                            </li>
                         </ul>
                     </div>
                 </div>
