@@ -91,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
             this.vx = (Math.random() - 0.5) * 0.5;
             this.vy = (Math.random() - 0.5) * 0.5;
             this.size = Math.random() * 2 + 1;
+            const colors = ['rgba(0, 240, 255, 0.6)', 'rgba(255, 0, 170, 0.6)', 'rgba(0, 255, 157, 0.6)'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
         }
 
         update() {
@@ -104,8 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.5)';
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
             ctx.fill();
+            ctx.shadowBlur = 0; // reset
         }
     }
 
@@ -133,7 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (distance < 150) {
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 - distance / 1000})`;
+                    // Create gradient for lines between particles
+                    const gradient = ctx.createLinearGradient(p.x, p.y, p2.x, p2.y);
+                    gradient.addColorStop(0, p.color.replace('0.6', `${0.2 - distance / 1000}`));
+                    gradient.addColorStop(1, p2.color.replace('0.6', `${0.2 - distance / 1000}`));
+                    ctx.strokeStyle = gradient;
                     ctx.lineWidth = 1;
                     ctx.moveTo(p.x, p.y);
                     ctx.lineTo(p2.x, p2.y);
