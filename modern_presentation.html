@@ -693,6 +693,7 @@ while True:
     <div class="controls">
         <button class="btn-nav" id="prevBtn"><i class="fa-solid fa-arrow-left"></i></button>
         <div class="progress-dots" id="dots-container"></div>
+        <div class="page-counter" id="page-counter" style="color: var(--text-muted); font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 2px; border-left: 1px solid rgba(255, 255, 255, 0.1); padding-left: 1.2rem; margin-left: 0.5rem; display: flex; align-items: center;">1 / 9</div>
         <button class="btn-nav" id="nextBtn"><i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
@@ -758,6 +759,7 @@ while True:
 
                 dots[currentSlide].classList.remove('active');
                 dots[index].classList.add('active');
+                document.getElementById('page-counter').innerText = `${index + 1} / ${totalSlides}`;
 
                 gsap.to(outgoing, {
                     opacity: 0, scale: 1.05, duration: 0.6, ease: "power2.inOut",
