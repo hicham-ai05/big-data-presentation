@@ -389,8 +389,34 @@
             </div>
         </div>
 
-        <!-- Slide 2: Missions & Objectifs -->
-        <div class="slide" id="slide-2">
+        <!-- Slide 2: Problématique -->
+        <div class="slide" id="slide-problematique">
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item"
+                    style="font-size: 3rem; margin-bottom: 2rem; text-align: center;">Problématique</h2>
+                <div class="stagger-item" style="max-width: 900px; margin: 0 auto; text-align: center;">
+                    <p style="color: var(--text-main); font-size: 1.3rem; line-height: 1.6; margin-bottom: 2rem;">
+                        Aujourd'hui, nous faisons face à un <strong>volume massif de données météorologiques</strong> qui évolue constamment. Les approches traditionnelles (batch) sont insuffisantes face à deux défis majeurs :
+                    </p>
+                </div>
+                <div class="grid-2 stagger-item" style="gap: 2rem; margin-bottom: 2rem;">
+                    <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 16px; border-left: 4px solid #e55039;">
+                        <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem;"><i class="fa-solid fa-clock" style="color: #e55039;"></i> La Latence</h3>
+                        <p style="color: var(--text-muted); line-height: 1.5;">Le retard dans l'analyse de données météorologiques critiques peut avoir des conséquences graves pour la logistique et l'anticipation des risques.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 16px; border-left: 4px solid var(--neon-purple);">
+                        <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem;"><i class="fa-solid fa-chart-line" style="color: var(--neon-purple);"></i> Le Passage à l'Échelle</h3>
+                        <p style="color: var(--text-muted); line-height: 1.5;">Comment garantir qu'un système reste performant lorsque le flux passe de centaines à des millions de requêtes par seconde ?</p>
+                    </div>
+                </div>
+                <div class="stagger-item" style="text-align: center; background: rgba(0, 240, 255, 0.1); padding: 1.5rem; border-radius: 16px; border: 1px dashed var(--neon-cyan);">
+                    <p style="color: var(--neon-cyan); font-size: 1.2rem; font-weight: bold;">L'enjeu : Mettre en place un pipeline de données "Temps Réel" robuste, capable d'ingérer, traiter et visualiser l'information sans interruption.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Missions & Objectifs -->
+        <div class="slide" id="slide-3">
             <div class="glass-panel stagger-container">
                 <h2 class="gradient-text stagger-item"
                     style="font-size: 3rem; margin-bottom: 2rem; text-align: center;">Missions & Objectifs</h2>
@@ -653,8 +679,39 @@ while True:
             </div>
         </div>
 
-        <!-- Slide 9: Conclusion -->
-        <div class="slide" id="slide-9">
+        <!-- Slide 10: Perspectives -->
+        <div class="slide" id="slide-perspectives">
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item"
+                    style="font-size: 3rem; margin-bottom: 2rem; text-align: center;">Perspectives & Améliorations</h2>
+                
+                <p class="subtitle stagger-item" style="margin-bottom: 3rem; max-width: 900px;">
+                    Pour rendre l'application totalement <strong>complète et "Ready to Use"</strong> en environnement de production, voici les évolutions nécessaires :
+                </p>
+
+                <ul class="mission-list" style="max-width: 900px; margin: 0 auto;">
+                    <li class="mission-item stagger-item" style="border-left-color: #f1c40f;">
+                        <i class="fa-solid fa-shield-halved mission-icon" style="color: #f1c40f;"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Sécurité & Authentification</strong> : Implémenter un système de login sur Streamlit et sécuriser les flux Kafka avec SSL/SASL.</div>
+                    </li>
+                    <li class="mission-item stagger-item" style="border-left-color: #2ecc71;">
+                        <i class="fa-solid fa-code-branch mission-icon" style="color: #2ecc71;"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Déploiement Automatisé (CI/CD)</strong> : Conteneuriser avec <strong>Docker</strong> et utiliser GitHub Actions pour un déploiement fluide dans le Cloud.</div>
+                    </li>
+                    <li class="mission-item stagger-item" style="border-left-color: #e67e22;">
+                        <i class="fa-solid fa-bell mission-icon" style="color: #e67e22;"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Système d'Alerting</strong> : Ajouter l'envoi de notifications (Email/SMS) dès qu'une anomalie météo critique est détectée dans le flux.</div>
+                    </li>
+                    <li class="mission-item stagger-item" style="border-left-color: var(--neon-cyan);">
+                        <i class="fa-solid fa-robot mission-icon" style="color: var(--neon-cyan);"></i>
+                        <div><strong style="color:white; font-size: 1.2rem;">Machine Learning</strong> : Intégrer un modèle d'IA pour prédire la météo des prochaines heures en fonction de l'historique en direct.</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide" id="slide-conclusion">
             <div class="glass-panel stagger-container" style="text-align: center;">
                 <h2 class="title-massive stagger-item" style="font-size: 3rem; margin-bottom: 1rem;">Conclusion &
                     Performances</h2>
@@ -745,7 +802,7 @@ while True:
                     { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out", delay: 0.2 }
                 );
 
-                if (slide.id === 'slide-9') {
+                if (slide.id === 'slide-conclusion') {
                     setTimeout(() => animateCounters(slide), 800);
                 }
             }
