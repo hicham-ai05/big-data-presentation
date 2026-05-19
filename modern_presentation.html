@@ -678,30 +678,57 @@ while True:
 
         <!-- Slide 9: Conclusion -->
         <div class="slide" id="slide-9">
-            <div class="glass-panel stagger-container" style="text-align: center;">
-                <h2 class="title-massive stagger-item" style="font-size: 4rem; margin-bottom: 3rem;">Conclusion &
-                    Performances</h2>
+            <div class="glass-panel stagger-container">
+                <h2 class="gradient-text stagger-item" style="font-size: 3rem; margin-bottom: 2rem; text-align: center;">Conclusion</h2>
 
-                <div class="grid-2 stagger-item"
-                    style="grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 4rem;">
-                    <div class="metric-card">
-                        <div class="metric-value counter" data-target="500">0</div>
-                        <span style="color: var(--text-muted);">Latence de Bout en Bout (ms)</span>
+                <!-- Summary paragraph -->
+                <p class="stagger-item" style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; text-align: center; max-width: 900px; margin: 0 auto 2.5rem auto;">
+                    Ce projet démontre la faisabilité d'une architecture <strong style="color:white;">Big Data en temps réel</strong>,
+                    combinant <strong style="color:white;">Apache Kafka</strong> et <strong style="color:white;">Azure Event Hubs</strong>
+                    pour l'ingestion continue de données météorologiques. Les données sont persistées dans
+                    <strong style="color:white;">PostgreSQL</strong> et restituées via des tableaux de bord interactifs
+                    <strong style="color:white;">Power BI</strong> et <strong style="color:white;">Streamlit</strong>,
+                    offrant une visibilité complète et instantanée.
+                </p>
+
+                <!-- Key achievements bullets -->
+                <div class="stagger-item" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem;">
+                    <div style="display:flex; align-items:center; gap:1rem; background: rgba(255,255,255,0.03); padding: 1rem 1.5rem; border-radius: 12px; border-left: 3px solid var(--neon-cyan);">
+                        <i class="fa-solid fa-bolt" style="color: var(--neon-cyan); font-size:1.3rem;"></i>
+                        <span style="color:white;">Pipeline de streaming opérationnel de bout en bout</span>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value counter" data-target="100">0</div>
-                        <span style="color: var(--text-muted);">% Durabilité des Données</span>
+                    <div style="display:flex; align-items:center; gap:1rem; background: rgba(255,255,255,0.03); padding: 1rem 1.5rem; border-radius: 12px; border-left: 3px solid var(--neon-purple);">
+                        <i class="fa-solid fa-cloud" style="color: var(--neon-purple); font-size:1.3rem;"></i>
+                        <span style="color:white;">Intégration Cloud native via Azure Event Hubs</span>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value counter" data-target="99.9">0</div>
-                        <span style="color: var(--text-muted);">% Disponibilité (Uptime)</span>
+                    <div style="display:flex; align-items:center; gap:1rem; background: rgba(255,255,255,0.03); padding: 1rem 1.5rem; border-radius: 12px; border-left: 3px solid #3b82f6;">
+                        <i class="fa-solid fa-database" style="color: #3b82f6; font-size:1.3rem;"></i>
+                        <span style="color:white;">Stockage fiable et structuré dans PostgreSQL</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem; background: rgba(255,255,255,0.03); padding: 1rem 1.5rem; border-radius: 12px; border-left: 3px solid var(--neon-orange);">
+                        <i class="fa-solid fa-chart-line" style="color: var(--neon-orange); font-size:1.3rem;"></i>
+                        <span style="color:white;">Visualisation analytique en temps réel (Power BI & Streamlit)</span>
                     </div>
                 </div>
 
-                <div class="stagger-item"
-                    style="background: rgba(255,255,255,0.02); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); display: inline-block;">
-                    <h3 style="color: white; font-size: 2rem; margin-bottom: 1rem;">Merci de votre attention</h3>
-                    <p style="color: var(--neon-cyan); font-size: 1.2rem;">Session Questions / Réponses</p>
+                <!-- Metrics + Thank You -->
+                <div class="stagger-item" style="display: flex; justify-content: center; align-items: center; gap: 3rem; flex-wrap: wrap;">
+                    <div style="text-align:center;">
+                        <div class="metric-value counter" data-target="500" style="font-size: 2.5rem;">0</div>
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">ms Latence</span>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="metric-value counter" data-target="100" style="font-size: 2.5rem;">0</div>
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">% Durabilité</span>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="metric-value counter" data-target="99.9" style="font-size: 2.5rem;">0</div>
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">% Disponibilité</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 1.2rem 2.5rem; border-radius: 50px; border: 1px solid var(--glass-border); text-align: center;">
+                        <h3 style="color: white; font-size: 1.5rem; margin-bottom: 0.3rem;">Merci de votre attention</h3>
+                        <p style="color: var(--neon-cyan); font-size: 1rem;">Questions / Réponses</p>
+                    </div>
                 </div>
             </div>
         </div>
